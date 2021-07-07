@@ -31,6 +31,7 @@ const MAX_ROOMS = 20;
 const MIN_GUESTS = 1;
 const MAX_GUESTS = 10;
 const MAX_PLACE_PHOTOS = 10;
+const ADVERTS_COUNT = 10;
 
 // Возвращает случайное целое число из переданного диапазона включительно
 
@@ -96,18 +97,18 @@ const getFewRandomElementsNoRepeat = (someArray) => {
   return newArray;
 };
 
-const author = {
+const createAuthor = {
   avatar: `img/avatars/user${getRandomElementNoRepeat(makeArrayWithIncreasingNumbers(AVATARS_COUNT))}.png`,
 };
 
-const location = {
+const createLocation = {
   lat: getRandomFloatingPointNumber(35.65, 35.7, 5),
   lng: getRandomFloatingPointNumber(139.7, 139.8, 5),
 };
 
-const offer = {
+const createOffer = {
   title: 'Лучшее предложение для солидных котов',
-  address: `${location.lat}, ${location.lng}`,
+  address: `${createLocation.lat}, ${createLocation.lng}`,
   price: getRandomIntInclusive(MIN_PLACE_PRICE, MAX_PLACE_PRICE),
   type: getRandomElement(PLACE_TYPE),
   rooms: getRandomIntInclusive(MIN_ROOMS, MAX_ROOMS),
@@ -119,45 +120,12 @@ const offer = {
   photos: getFewRandomElements(PLACE_PHOTOS, MAX_PLACE_PHOTOS),
 };
 
-const createAdvert = () => {
+const createAdvert = () => ({
+  author: createAuthor,
+  offer: createOffer,
+  location: createLocation,
+});
 
-}
-// console.log(getFewRandomElements(PLACE_PHOTOS, MAX_PLACE_PHOTOS));
-// console.log(offer);
+const generateNearbyAdverts = new Array(ADVERTS_COUNT).fill('.').map(() => createAdvert());
 
-
-/*
-Структура каждого объекта должна быть следующей:
-
-offer, объект — содержит информацию об объявлении. Состоит из полей:
-  description, строка — описание помещения. Придумайте самостоятельно.
-
-  photos, массив строк — массив случайной длины из значений: https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg, https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg, https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg.
-
-
-const createAdvert = () => {
-  return {
-    author: {avatar: ''},
-    offer: {
-      title: '',
-      address: '',
-      price: '', // Сделать числом!
-      type: '',
-      rooms: '', // Случайное целое положительное число
-      guests: '', // Случайное целое положительное число
-      checkin: '', // одно из трёх фиксированных значений: 12:00, 13:00 или 14:00
-      checkout: '', // одно из трёх фиксированных значений: 12:00, 13:00 или 14:00
-      features: [], // массив случайной длины из значений. Значения не должны повторяться.
-      description: '',
-      photos: []
-    },
-    location: {
-      lat,
-      lng
-    }
-  };
-};
-
-createAdvert();
-
-*/
+generateNearbyAdverts;
