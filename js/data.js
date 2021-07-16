@@ -40,7 +40,7 @@ const MAX_ROOMS = 20;
 const MIN_GUESTS = 1;
 const MAX_GUESTS = 10;
 const MAX_PLACE_PHOTOS = 10;
-const ADVERTS_COUNT = 10;
+const ADVERTS_COUNT = 1;
 
 const createAuthor = {
   avatar: `img/avatars/user${getRandomElementNoRepeat(makeArrayWithIncreasingNumbers(AVATARS_COUNT))}.png`,
