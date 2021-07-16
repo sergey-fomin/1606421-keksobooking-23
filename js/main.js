@@ -1,5 +1,6 @@
 import {generateNearbyAdverts} from './data.js';
-import {cardTemplate} from './offers.js';
+import {generateOffersOnMap}  from './offers.js';
 
 generateNearbyAdverts;
+generateOffersOnMap;
 
