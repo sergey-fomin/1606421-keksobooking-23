@@ -9,24 +9,11 @@ const disableForm = (form) => {
   }
 };
 
-const pageInactive = () => {
-  document.addEventListener('readystatechange', () => {
-    switch (document.readyState) {
-      case 'loading':
-        // Страница все ещё загружается
-        break;
-      case 'interactive':
-        // Страница уже загружена. Теперь мы можем получить доступ к DOM объектам.
-        disableForm(mapFilters);
-        disableForm(adForm);
-        break;
-      case 'complete':
-        // Страница загружена вместе с дополнительными ресурсами.
-        break;
-    }
-  });
+const disablePage = () => {
+  disableForm(mapFilters);
+  disableForm(adForm);
 };
 
-const loadPage = pageInactive();
+const loadInactivePage = disablePage();
 
-export { loadPage };
+export { loadInactivePage };
