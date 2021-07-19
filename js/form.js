@@ -1,3 +1,5 @@
+import {resetMap} from './map.js';
+
 const MIN_PRICE_PER_NIGHT = {
   palace: 10000,
   flat: 1000,
@@ -15,6 +17,8 @@ const adSelectTimeout = adForm.querySelector('#timeout');
 const adSelectRooms = adForm.querySelector('#room_number');
 const adSelectGuests = adForm.querySelector('#capacity');
 const adInputTitle = adForm.querySelector('#title');
+const adAddress = adForm.querySelector('#address');
+const adFormResetButton = adForm.querySelector('.ad-form__reset');
 
 const checkValidity = () => {
   const placeTypeChangeHandler = () => {
@@ -80,6 +84,14 @@ const checkValidity = () => {
   });
 };
 
+const setPinAddress = ({ lat, lng}) => {
+  adAddress.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+};
+
 const checkAdFormValidity = checkValidity();
 
-export { checkAdFormValidity };
+adFormResetButton.addEventListener('click', () => {
+  resetMap();
+});
+
+export { checkAdFormValidity, setPinAddress };
