@@ -1,6 +1,8 @@
+import { enablePage } from './load.js';
+
 const map = L.map('map-canvas')
   .on('load', () => {
-
+    enablePage();
   })
   .setView(
     {
