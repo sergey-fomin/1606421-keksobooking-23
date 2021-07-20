@@ -1,22 +1,24 @@
-const successPopup = document.querySelector('#success').content
-  .querySelector('.success');
+const successPopup = document
+  .querySelector('#success')
+  .content.querySelector('.success');
 
-const errorPopup = document.querySelector('#error').content
-  .querySelector('.error');
+const errorPopup = document
+  .querySelector('#error')
+  .content.querySelector('.error');
 
 const isEscKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
-const onClosePopup =(evt) =>{
+const closePopupHandler = (evt) => {
   const popup = document.querySelector('.active-popup');
   if (isEscKey(evt) || evt.type === 'click') {
     popup.remove();
-    document.removeEventListener('keydown', onClosePopup);
+    document.removeEventListener('keydown', closePopupHandler);
   }
 };
 
 const closePopupListener = (popup) => {
-  document.addEventListener('keydown', onClosePopup);
-  popup.addEventListener('click', onClosePopup);
+  document.addEventListener('keydown', closePopupHandler);
+  popup.addEventListener('click', closePopupHandler);
 };
 
 const showPopup = (popupSample) => () => {

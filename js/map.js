@@ -1,5 +1,6 @@
 import { mapFilter } from './filters.js';
-import { enableForms, setPinAddress } from './forms-control.js';
+import { setPinAddress } from './forms-control.js';
+import { placeTypeChangeHandler } from './ad-form-validation.js';
 import { generateOfferPopup } from './generate-offer.js';
 
 let allOffersData = [];
@@ -37,7 +38,7 @@ const map = L.map('map-canvas');
 const loadMap = async () => {
   map
     .on('load', () => {
-      enableForms();
+      placeTypeChangeHandler();
       setPinAddress(MapOptions.DEFAULT_COORDS);
     })
     .setView(
@@ -93,8 +94,7 @@ const createMarker = (currentOffer) => {
       icon,
     },
   );
-  marker.addTo(markerGroup)
-    .bindPopup(generateOfferPopup(currentOffer));
+  marker.addTo(markerGroup).bindPopup(generateOfferPopup(currentOffer));
 };
 
 const createMarkersGroup = (similarOffers) => {

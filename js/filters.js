@@ -2,8 +2,9 @@ import { debounce } from './utils.js';
 
 const mapFiltersForm = document.querySelector('.map__filters');
 const featuresInput = mapFiltersForm.querySelectorAll('[type="checkbox"]');
+
 const SIMILAR_OFFERS_MAX = 10;
-const ANY_RANGE = 'any';
+const DEFAULT_RANGE = 'any';
 const PRICE_RANGE = {
   LOW: {
     MIN: 0,
@@ -18,8 +19,7 @@ const PRICE_RANGE = {
     MAX: Infinity,
   },
 };
-
-const FILTERS ={
+const FILTERS = {
   TYPE: mapFiltersForm['housing-type'],
   PRICE: mapFiltersForm['housing-price'],
   ROOMS: mapFiltersForm['housing-rooms'],
@@ -28,10 +28,15 @@ const FILTERS ={
 
 const featuresFilter = (offersList) => {
   const selectedFeatures = [...featuresInput].filter((input) => input.checked);
-  const filtered = offersList.slice()
+  const filtered = offersList
+    .slice()
     .filter((currentOffer) =>
-      selectedFeatures.every((feature) =>
-        currentOffer.offer.features && currentOffer.offer.features.includes(feature.value)));
+      selectedFeatures.every(
+        (feature) =>
+          currentOffer.offer.features &&
+          currentOffer.offer.features.includes(feature.value),
+      ),
+    );
   return filtered;
 };
 
@@ -39,37 +44,45 @@ const adFilter = (offersList) => {
   const filtersValue = {
     type: FILTERS.TYPE.value,
     price: FILTERS.PRICE.value.toUpperCase(),
-    rooms: Number(FILTERS.ROOMS.value) ||
-      FILTERS.ROOMS.value.toLowerCase(),
-    guests: Number(FILTERS.GUESTS.value) ||
-      FILTERS.GUESTS.value.toLowerCase(),
+    rooms: Number(FILTERS.ROOMS.value) || FILTERS.ROOMS.value.toLowerCase(),
+    guests: Number(FILTERS.GUESTS.value) || FILTERS.GUESTS.value.toLowerCase(),
   };
   const filterKeys = Object.keys(filtersValue);
-  const filteredOffers = offersList.slice()
-    .filter((currentOffer) => filterKeys.every((key) => {
+  const filteredOffers = offersList.slice().filter((currentOffer) =>
+    filterKeys.every((key) => {
       if (key === 'price') {
-        if (Object.prototype.hasOwnProperty.call(PRICE_RANGE, filtersValue[key])) {
+        if (
+          Object.prototype.hasOwnProperty.call(PRICE_RANGE, filtersValue[key])
+        ) {
           const min = PRICE_RANGE[filtersValue[key]].MIN;
           const max = PRICE_RANGE[filtersValue[key]].MAX;
-          return (currentOffer.offer[key] >= min && currentOffer.offer[key] <= max);
+          return (
+            currentOffer.offer[key] >= min && currentOffer.offer[key] <= max
+          );
         }
         return true;
       }
-      return currentOffer.offer[key] === filtersValue[key] || filtersValue[key] === ANY_RANGE;
-    }));
+      return (
+        currentOffer.offer[key] === filtersValue[key] ||
+        filtersValue[key] === DEFAULT_RANGE
+      );
+    }),
+  );
   return filteredOffers;
 };
 
-const mapFilter =(data) => {
+const mapFilter = (data) => {
   const similarOffers = data.slice();
   const filteredFeatures = featuresFilter(similarOffers);
-  const filteredOffers = adFilter(filteredFeatures)
-    .slice(0, SIMILAR_OFFERS_MAX);
+  const filteredOffers = adFilter(filteredFeatures).slice(
+    0,
+    SIMILAR_OFFERS_MAX,
+  );
   return filteredOffers;
 };
 
-const setFilterFormChange = (callbackFn) => {
+const setMapFilterChange = (callbackFn) => {
   mapFiltersForm.addEventListener('change', debounce(callbackFn));
 };
 
-export { mapFilter, setFilterFormChange };
+export { mapFilter, setMapFilterChange };

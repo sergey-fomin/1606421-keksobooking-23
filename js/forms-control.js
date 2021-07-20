@@ -1,5 +1,9 @@
 import { resetMap } from './map.js';
-import { checkRoomsValidity, capacityChangeHandler, placeTypeChangeHandler } from './ad-form-validation.js';
+import {
+  checkRoomsValidity,
+  capacityChangeHandler,
+  placeTypeChangeHandler
+} from './ad-form-validation.js';
 import { sendData } from './api.js';
 
 const adForm = document.querySelector('.ad-form');
@@ -52,20 +56,18 @@ const enableForms = () => {
   enableMapFilters();
 };
 
-
 const setPinAddress = ({ lat, lng }) => {
   adAddress.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 };
 
 const resetForms = () => {
   adForm.reset();
-  photoPreview.textContent ='';
+  photoPreview.textContent = '';
   avatar.textContent = '';
   avatar.append(defaultAvatar);
   mapFiltersForm.reset();
   placeTypeChangeHandler();
 };
-
 
 adFormResetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
@@ -73,18 +75,23 @@ adFormResetButton.addEventListener('click', (evt) => {
   resetMap();
 });
 
-const adFormSubmitHandler = (sendSuccess,sendFailed) => {
+const adFormSubmitHandler = (sendSuccess, sendFailed) => {
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     if (checkRoomsValidity()) {
-      sendData(
-        sendSuccess,
-        sendFailed,
-        new FormData(evt.target));
+      sendData(sendSuccess, sendFailed, new FormData(evt.target));
     } else {
       capacityChangeHandler();
     }
   });
 };
 
-export { disableForms, enableForms, setPinAddress, resetForms, enableMapFilters, enableAdForm, adFormSubmitHandler };
+export {
+  disableForms,
+  enableForms,
+  setPinAddress,
+  resetForms,
+  enableMapFilters,
+  enableAdForm,
+  adFormSubmitHandler
+};

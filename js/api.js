@@ -1,12 +1,12 @@
 import { resetForms } from './forms-control.js';
 import { resetMap } from './map.js';
-// const URL = {
-//   GET: 'https://23.javascript.pages.academy/keksobooking/data',
-//   POST: 'https://23.javascript.pages.academy/keksobooking/data',
-// }
+const URL_FOR_METHOD = {
+  GET: 'https://23.javascript.pages.academy/keksobooking/data',
+  POST: 'https://23.javascript.pages.academy/keksobooking',
+};
 
 const getData = (onSuccess, onFail) => {
-  fetch('https://23.javascript.pages.academy/keksobooking/data')
+  fetch(URL_FOR_METHOD.GET)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -18,11 +18,10 @@ const getData = (onSuccess, onFail) => {
 };
 
 const sendData = (onSuccess, onFail, body) => {
-  fetch('https://23.javascript.pages.academy/keksobooking',
-    {
-      method: 'POST',
-      body,
-    })
+  fetch(URL_FOR_METHOD.POST, {
+    method: 'POST',
+    body,
+  })
     .then((response) => {
       if (response.ok) {
         onSuccess();
@@ -35,4 +34,4 @@ const sendData = (onSuccess, onFail, body) => {
     .catch(onFail);
 };
 
-export {getData, sendData};
+export { getData, sendData };

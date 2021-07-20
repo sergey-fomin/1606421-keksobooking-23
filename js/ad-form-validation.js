@@ -130,21 +130,11 @@ const checkAdValidity = () => {
   adSelectRooms.addEventListener('change', capacityChangeHandler);
 };
 
-// document.addEventListener('submit', (evt) => {
-//   if (adInputTitle.validity.valueMissing) {
-//     evt.preventDefault();
-//     adInputTitle.style = 'border: 2px solid rgba(255, 0, 0, 0.5);';
-//   }
-//   if (adInputPrice.validity.invalid) {
-//     evt.preventDefault();
-//     adInputPrice.style = 'border: 2px solid rgba(255, 0, 0, 0.5);';
-//   }
-//   if (!checkRoomsValidity()) {
-//     evt.preventDefault();
-//     adSelectGuests.style = 'border: 2px solid rgba(255, 0, 0, 0.5);';
-//   }
-// });
-
 const checkAdFormValidity = checkAdValidity();
 
-export { checkAdFormValidity, checkRoomsValidity, capacityChangeHandler, placeTypeChangeHandler };
+export {
+  checkAdFormValidity,
+  checkRoomsValidity,
+  capacityChangeHandler,
+  placeTypeChangeHandler
+};
