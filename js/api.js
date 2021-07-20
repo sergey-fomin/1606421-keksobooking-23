@@ -1,6 +1,10 @@
 import { resetForms } from './forms-control.js';
 import { resetMap } from './map.js';
-// const SERVER_URL = 'https://23.javascript.pages.academy/keksobooking'; make Obj for URL???
+// const URL = {
+//   GET: 'https://23.javascript.pages.academy/keksobooking/data',
+//   POST: 'https://23.javascript.pages.academy/keksobooking/data',
+// }
+
 const getData = (onSuccess, onFail) => {
   fetch('https://23.javascript.pages.academy/keksobooking/data')
     .then((response) => {

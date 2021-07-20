@@ -8,78 +8,143 @@ const MIN_PRICE_PER_NIGHT = {
 const MAX_ROOMS_FOR_GUESTS = 3;
 const MIN_GUESTS_PER_ROOM = 1;
 const adForm = document.querySelector('.ad-form');
-const adSelectPlaceType = adForm.querySelector('#type');
-const adInputPrice = adForm.querySelector('#price');
-const adSelectTimein = adForm.querySelector('#timein');
-const adSelectTimeout = adForm.querySelector('#timeout');
-const adSelectRooms = adForm.querySelector('#room_number');
-const adSelectGuests = adForm.querySelector('#capacity');
-const adInputTitle = adForm.querySelector('#title');
+const adSelectPlaceType = adForm.type;
+const adInputPrice = adForm.price;
+const adSelectTimein = adForm.timein;
+const adSelectTimeout = adForm.timeout;
+const adSelectRooms = adForm.rooms;
+const adSelectGuests = adForm.capacity;
+const adInputTitle = adForm.title;
+const minAdInputTitleLength = adInputTitle.getAttribute('minlength');
+const maxAdInputTitleLength = adInputTitle.getAttribute('maxlength');
 
-const checkValidity = () => {
-  const placeTypeChangeHandler = () => {
-    const minPriceForType = MIN_PRICE_PER_NIGHT[adSelectPlaceType.value];
+const maxAdPrice = Number(adInputPrice.getAttribute('max'));
 
-    adInputPrice.placeholder = minPriceForType;
-    adInputPrice.min = minPriceForType;
-  };
+const setFieldErrorMessage = (field) => {
+  if (field.validity.valueMissing) {
+    field.setCustomValidity('Заполните обязательное поле');
+  }
+};
 
-  const checkInChangeHandler = () => {
-    adSelectTimeout.value = adSelectTimein.value;
-  };
+const markInvalidFields = (evt) => {
+  const field = evt.target;
+  field.classList.add('invalid-field');
+  setFieldErrorMessage(field);
+};
 
-  const checkOutChangeHandler = () => {
-    adSelectTimein.value = adSelectTimeout.value;
-  };
-
-  const checkRoomsValidity = () => {
-    const rooms = adSelectRooms.value;
-    const guest = adSelectGuests.value;
-
-    const isValidForGuests =
-      rooms <= MAX_ROOMS_FOR_GUESTS &&
-      guest >= MIN_GUESTS_PER_ROOM &&
-      rooms >= guest;
-    const isValidNotForGuests = rooms >= MAX_ROOMS_FOR_GUESTS && guest === '0';
-    const isValid = isValidForGuests || isValidNotForGuests;
-
-    return isValid;
-  };
-
-  const capacityChangeHandler = () => {
-    if (checkRoomsValidity()) {
-      adSelectGuests.setCustomValidity('');
-    } else {
-      adSelectGuests.setCustomValidity(
-        'Количество гостей не соответствует количеству комнат',
-      );
-    }
-
-    adSelectGuests.reportValidity();
-  };
-
-  adSelectPlaceType.addEventListener('change', placeTypeChangeHandler);
-  adSelectTimein.addEventListener('change', checkInChangeHandler);
-  adSelectTimeout.addEventListener('change', checkOutChangeHandler);
-  adSelectGuests.addEventListener('change', capacityChangeHandler);
-  adSelectRooms.addEventListener('change', capacityChangeHandler);
-
-  document.addEventListener('submit', (evt) => {
-    if (adInputTitle.validity.valueMissing) {
-      evt.preventDefault();
-      adInputTitle.style = 'border: 2px solid rgba(255, 0, 0, 0.5);';
-    }
-    if (adInputPrice.validity.invalid) {
-      evt.preventDefault();
-      adInputPrice.style = 'border: 2px solid rgba(255, 0, 0, 0.5);';
-    }
-    if (!checkRoomsValidity()) {
-      evt.preventDefault();
-      adSelectGuests.style = 'border: 2px solid rgba(255, 0, 0, 0.5);';
+const unMarkInvalidFields = () => {
+  const fields = adForm.elements;
+  [...fields].forEach((field) => {
+    if (field.checkValidity()) {
+      field.classList.remove('invalid-field');
     }
   });
 };
 
-const checkAdFormValidity = checkValidity();
+const placeTypeChangeHandler = () => {
+  const minPriceForType = MIN_PRICE_PER_NIGHT[adSelectPlaceType.value];
 
-export { checkAdFormValidity };
+  adInputPrice.placeholder = minPriceForType;
+  adInputPrice.min = minPriceForType;
+};
+
+const timeChangeHandler = (evt) => {
+  if (evt.target === adSelectTimein) {
+    adSelectTimeout.value = adSelectTimein.value;
+  }
+  if (evt.target === adSelectTimeout) {
+    adSelectTimein.value = adSelectTimeout.value;
+  }
+};
+
+const checkRoomsValidity = () => {
+  const rooms = Number(adSelectRooms.value);
+  const guest = Number(adSelectGuests.value);
+
+  const isValidForGuests =
+    rooms <= MAX_ROOMS_FOR_GUESTS &&
+    guest >= MIN_GUESTS_PER_ROOM &&
+    rooms >= guest;
+  const isValidNotForGuests = rooms >= MAX_ROOMS_FOR_GUESTS && guest === '0';
+  const isValid = isValidForGuests || isValidNotForGuests;
+
+  return isValid;
+};
+
+const capacityChangeHandler = () => {
+  if (checkRoomsValidity()) {
+    adSelectGuests.setCustomValidity('');
+  } else {
+    adSelectGuests.setCustomValidity(
+      'Количество гостей не соответствует количеству комнат',
+    );
+  }
+
+  adSelectGuests.reportValidity();
+};
+
+const titleChangeHandler = () => {
+  const valueLength = adInputTitle.value.length;
+  if (valueLength < minAdInputTitleLength) {
+    adInputTitle.setCustomValidity(`Введите еще ${
+      minAdInputTitleLength - valueLength
+    }
+      симв.`);
+  } else if (valueLength > maxAdInputTitleLength) {
+    adInputTitle.setCustomValidity(`Удалите лишние ${
+      valueLength - maxAdInputTitleLength
+    }
+      симв.`);
+  } else {
+    adInputTitle.setCustomValidity('');
+  }
+  adInputTitle.reportValidity() && unMarkInvalidFields();
+};
+
+const priceChangeHandler = () => {
+  const minAdPrice = Number(adInputPrice.getAttribute('min'));
+  const currentPrice = Number(adInputPrice.value);
+  if (currentPrice > maxAdPrice) {
+    adInputPrice.setCustomValidity(
+      `Цена должна быть меньше ${maxAdPrice.toLocaleString()}`,
+    );
+  } else if (currentPrice < minAdPrice) {
+    adInputPrice.setCustomValidity(
+      `Цена должна быть больше ${minAdPrice.toLocaleString()}`,
+    );
+  } else {
+    adInputPrice.setCustomValidity('');
+  }
+  adInputPrice.reportValidity() && unMarkInvalidFields();
+};
+
+const checkAdValidity = () => {
+  adForm.addEventListener('invalid', markInvalidFields, true);
+  adInputTitle.addEventListener('input', titleChangeHandler);
+  adInputPrice.addEventListener('input', priceChangeHandler);
+  adSelectPlaceType.addEventListener('change', placeTypeChangeHandler);
+  adSelectPlaceType.addEventListener('change', priceChangeHandler);
+  adSelectTimein.addEventListener('change', timeChangeHandler);
+  adSelectTimeout.addEventListener('change', timeChangeHandler);
+  adSelectGuests.addEventListener('change', capacityChangeHandler);
+  adSelectRooms.addEventListener('change', capacityChangeHandler);
+};
+
+// document.addEventListener('submit', (evt) => {
+//   if (adInputTitle.validity.valueMissing) {
+//     evt.preventDefault();
+//     adInputTitle.style = 'border: 2px solid rgba(255, 0, 0, 0.5);';
+//   }
+//   if (adInputPrice.validity.invalid) {
+//     evt.preventDefault();
+//     adInputPrice.style = 'border: 2px solid rgba(255, 0, 0, 0.5);';
+//   }
+//   if (!checkRoomsValidity()) {
+//     evt.preventDefault();
+//     adSelectGuests.style = 'border: 2px solid rgba(255, 0, 0, 0.5);';
+//   }
+// });
+
+const checkAdFormValidity = checkAdValidity();
+
+export { checkAdFormValidity, checkRoomsValidity, capacityChangeHandler, placeTypeChangeHandler };

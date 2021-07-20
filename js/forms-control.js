@@ -1,4 +1,6 @@
 import { resetMap } from './map.js';
+import { checkRoomsValidity, capacityChangeHandler, placeTypeChangeHandler } from './ad-form-validation.js';
+import { sendData } from './api.js';
 
 const adForm = document.querySelector('.ad-form');
 const adAddress = adForm.querySelector('#address');
@@ -61,6 +63,7 @@ const resetForms = () => {
   avatar.textContent = '';
   avatar.append(defaultAvatar);
   mapFiltersForm.reset();
+  placeTypeChangeHandler();
 };
 
 
@@ -70,4 +73,18 @@ adFormResetButton.addEventListener('click', (evt) => {
   resetMap();
 });
 
-export { disableForms, enableForms, setPinAddress, resetForms, enableMapFilters, enableAdForm };
+const adFormSubmitHandler = (sendSuccess,sendFailed) => {
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    if (checkRoomsValidity()) {
+      sendData(
+        sendSuccess,
+        sendFailed,
+        new FormData(evt.target));
+    } else {
+      capacityChangeHandler();
+    }
+  });
+};
+
+export { disableForms, enableForms, setPinAddress, resetForms, enableMapFilters, enableAdForm, adFormSubmitHandler };
