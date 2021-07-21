@@ -5,13 +5,16 @@ import {
   placeTypeChangeHandler
 } from './ad-form-validation.js';
 import { sendData } from './api.js';
+import { uploadImage } from './upload.js';
 
 const adForm = document.querySelector('.ad-form');
 const adAddress = adForm.querySelector('#address');
 const adFormResetButton = adForm.querySelector('.ad-form__reset');
-const avatar = adForm.querySelector('.ad-form-header__preview');
-const defaultAvatar = avatar.querySelector('img').cloneNode(true);
-const photoPreview = document.querySelector('.ad-form__photo');
+const avatarPreview = adForm.querySelector('.ad-form-header__preview');
+const defaultAvatar = avatarPreview.querySelector('img').cloneNode(true);
+const photoPreview = adForm.querySelector('.ad-form__photo');
+const avatarChooser = adForm.querySelector('#avatar');
+const photosChooser = adForm.querySelector('#images');
 const mapFiltersForm = document.querySelector('.map__filters');
 
 const disableAdForm = () => {
@@ -44,6 +47,9 @@ const enableMapFilters = () => {
   for (let i = 0; i < mapFiltersForm.children.length; i++) {
     mapFiltersForm.children[i].removeAttribute('disabled');
   }
+
+  avatarChooser.addEventListener('change', uploadImage);
+  photosChooser.addEventListener('change', uploadImage);
 };
 
 const disableForms = () => {
@@ -63,8 +69,8 @@ const setPinAddress = ({ lat, lng }) => {
 const resetForms = () => {
   adForm.reset();
   photoPreview.textContent = '';
-  avatar.textContent = '';
-  avatar.append(defaultAvatar);
+  avatarPreview.textContent = '';
+  avatarPreview.append(defaultAvatar);
   mapFiltersForm.reset();
   placeTypeChangeHandler();
 };
