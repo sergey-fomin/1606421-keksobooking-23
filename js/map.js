@@ -1,10 +1,11 @@
-import { enablePage } from './load.js';
-import { setPinAddress } from './form.js';
-import { newCardData, generateCustomPopup } from './offers.js';
+import { mapFilter } from './filters.js';
+import { setPinAddress } from './forms-control.js';
+import { placeTypeChangeHandler } from './ad-form-validation.js';
+import { generateOfferPopup } from './generate-offer.js';
 
-const tempOffers = newCardData;
+let allOffersData = [];
 const MapOptions = {
-  ZOOM: 10,
+  ZOOM: 11,
   DEFAULT_COORDS: {
     lat: 35.6895,
     lng: 139.692,
@@ -28,18 +29,26 @@ const MapOptions = {
   },
 };
 
-const map = L.map('map-canvas')
-  .on('load', () => {
-    enablePage();
-    setPinAddress(MapOptions.DEFAULT_COORDS);
-  })
-  .setView(
-    {
-      lat: MapOptions.DEFAULT_COORDS.lat,
-      lng: MapOptions.DEFAULT_COORDS.lng,
-    },
-    MapOptions.ZOOM,
-  );
+const refreshOffersData = (newData) => {
+  allOffersData = newData.slice();
+};
+
+const map = L.map('map-canvas');
+
+const loadMap = async () => {
+  map
+    .on('load', () => {
+      placeTypeChangeHandler();
+      setPinAddress(MapOptions.DEFAULT_COORDS);
+    })
+    .setView(
+      {
+        lat: MapOptions.DEFAULT_COORDS.lat,
+        lng: MapOptions.DEFAULT_COORDS.lng,
+      },
+      MapOptions.ZOOM,
+    );
+};
 
 L.tileLayer(MapOptions.TILE.URL, {
   attribution: MapOptions.TILE.ATTR,
@@ -68,21 +77,33 @@ mainMarker.on('move', (evt) => {
 
 const markerGroup = L.layerGroup().addTo(map);
 
-const createMarker = (elem) => {
+const createMarker = (currentOffer) => {
+  const { lat, lng } = currentOffer.location;
   const icon = L.icon({
     iconUrl: `${MapOptions.MARKER.ICON_PATH}${MapOptions.MARKER.DEFAULT.ICON_NAME}`,
     iconSize: MapOptions.MARKER.DEFAULT.ICON_SIZE,
     iconAnchor: MapOptions.MARKER.DEFAULT.ICON_ANCHOR,
   });
 
-  const marker = L.marker(elem.location, { icon });
-
-  marker.addTo(markerGroup).bindPopup(generateCustomPopup(elem), { keepInView: true });
+  const marker = L.marker(
+    {
+      lat,
+      lng,
+    },
+    {
+      icon,
+    },
+  );
+  marker.addTo(markerGroup).bindPopup(generateOfferPopup(currentOffer));
 };
 
-tempOffers.forEach((elem) => {
-  createMarker(elem);
-});
+const createMarkersGroup = (similarOffers) => {
+  markerGroup.clearLayers();
+  const filteredOffers = mapFilter(similarOffers);
+  filteredOffers.forEach((currentOffer) => {
+    createMarker(currentOffer);
+  });
+};
 
 const resetMap = () => {
   map.setView(
@@ -97,6 +118,7 @@ const resetMap = () => {
     MapOptions.DEFAULT_COORDS.lng,
   ]);
   setPinAddress(MapOptions.DEFAULT_COORDS);
+  createMarkersGroup(allOffersData);
 };
 
-export { resetMap };
+export { refreshOffersData, resetMap, loadMap, createMarkersGroup };

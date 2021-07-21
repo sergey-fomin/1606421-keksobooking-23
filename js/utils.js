@@ -37,7 +37,8 @@ const makeArrayWithIncreasingNumbers = (arrayLength = 2) => {
 
 // Возвращает случайный элемент массива
 
-const getRandomElement= (someArray) => someArray[getRandomIntInclusive(0, someArray.length - 1)];
+const getRandomElement = (someArray) =>
+  someArray[getRandomIntInclusive(0, someArray.length - 1)];
 
 // Возвращает случайный элемент массива без повторений
 
@@ -66,11 +67,22 @@ const getFewRandomElementsNoRepeat = (someArray) => {
   return newArray;
 };
 
-export {getRandomIntInclusive,
+const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export {
+  getRandomIntInclusive,
   getRandomFloatingPointNumber,
   makeArrayWithIncreasingNumbers,
   getRandomElement,
   getRandomElementNoRepeat,
   getFewRandomElements,
-  getFewRandomElementsNoRepeat
+  getFewRandomElementsNoRepeat,
+  debounce
 };

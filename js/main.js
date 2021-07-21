@@ -1,10 +1,31 @@
-import {loadInactivePage} from './load.js';
-import './map.js';
-import {generateNearbyAdverts} from './data.js';
-// import {generateOffersOnMap}  from './offers.js';
-import {checkAdFormValidity} from './form.js';
+import {
+  adFormSubmitHandler,
+  disableForms,
+  enableAdForm,
+  enableMapFilters
+} from './forms-control.js';
+import { getData } from './api.js';
+import { setMapFilterChange } from './filters.js';
+import { checkAdFormValidity } from './ad-form-validation.js';
+import { loadMap, refreshOffersData, createMarkersGroup } from './map.js';
+import { errorPopup, showPopup, successPopup } from './popup.js';
 
-loadInactivePage;
-generateNearbyAdverts;
-// generateOffersOnMap;
-checkAdFormValidity;
+disableForms();
+
+const loadSimilarOffers = () => {
+  getData((offersList) => {
+    refreshOffersData(offersList);
+    createMarkersGroup(offersList);
+    enableMapFilters();
+    setMapFilterChange(() => createMarkersGroup(offersList));
+  }, showPopup(errorPopup));
+};
+
+loadMap()
+  .then(loadSimilarOffers)
+  .then(enableAdForm)
+  .then(checkAdFormValidity)
+  .then(() => {
+    adFormSubmitHandler(showPopup(successPopup), showPopup(errorPopup));
+  })
+  .catch(showPopup(errorPopup));
