@@ -46,7 +46,7 @@ const createFeaturesList = (currentOffer, featuresList) => {
 const generateOfferPopup = (currentOffer) => {
   const popupElement = popupTemplate.cloneNode(true);
   const offerPrice = popupElement.querySelector('.popup__text--price');
-  const offerPriceСurrency = offerPrice.querySelector('span');
+  const offerPriceCurrency = offerPrice.querySelector('span');
   const offerDescription = popupElement.querySelector('.popup__description');
   const offerTitle = popupElement.querySelector('.popup__title');
   const offerAddress = popupElement.querySelector('.popup__text--address');
@@ -69,7 +69,7 @@ const generateOfferPopup = (currentOffer) => {
     offerPrice,
   )} `;
   if (offerPrice.textContent) {
-    offerPrice.append(offerPriceСurrency);
+    offerPrice.append(offerPriceCurrency);
   }
 
   offerPlaceType.textContent = PLACE_TYPE[currentOffer.offer.type];
