@@ -45,7 +45,6 @@ const uploadImage = (evt) => {
 
   if (typeMatches) {
     const reader = new FileReader();
-    const wrapperClone = TARGET.photos.preview.cloneNode(false);
 
     reader.addEventListener('load', () => {
       imageSample.src = reader.result;
@@ -55,17 +54,7 @@ const uploadImage = (evt) => {
           preview.append(imageSample);
           break;
         case TARGET.photos.target:
-          switch (TARGET.photos.preview.hasChildNodes()) {
-            case true:
-              wrapperClone.appendChild(imageSample);
-              console.log(wrapperClone);
-              TARGET.photos.container.appendChild('beforeend', wrapperClone);
-              console.log(TARGET.photos.wrapperClone);
-              break;
-            case false:
-              preview.append(imageSample);
-              break;
-          }
+          preview.appendChild(imageSample);
           break;
       }
     });
