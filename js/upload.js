@@ -14,7 +14,6 @@ const TARGET = {
   photos: {
     target: photosChooser,
     preview: photoPreview,
-    wrapperClone: photoPreview.cloneNode(true),
     fileTypes: ['webp', 'jpg', 'jpeg', 'png'],
     container: photosContainer,
   },
@@ -36,6 +35,9 @@ const uploadImage = (evt) => {
     case TARGET.photos.target:
       acceptableTypes = TARGET.photos.fileTypes;
       preview = TARGET.photos.preview;
+      preview.style.display = 'flex';
+      preview.style.justifyContent = 'center';
+      preview.style.alignItems = 'center';
       break;
   }
 
@@ -43,6 +45,7 @@ const uploadImage = (evt) => {
 
   if (typeMatches) {
     const reader = new FileReader();
+    const wrapperClone = TARGET.photos.preview.cloneNode(false);
 
     reader.addEventListener('load', () => {
       imageSample.src = reader.result;
@@ -54,13 +57,10 @@ const uploadImage = (evt) => {
         case TARGET.photos.target:
           switch (TARGET.photos.preview.hasChildNodes()) {
             case true:
-              TARGET.photos.wrapperClone.append(imageSample);
+              wrapperClone.appendChild(imageSample);
+              console.log(wrapperClone);
+              TARGET.photos.container.appendChild('beforeend', wrapperClone);
               console.log(TARGET.photos.wrapperClone);
-              TARGET.photos.container.append(TARGET.photos.wrapperClone);
-              TARGET.photos.container.insertBefore(
-                TARGET.photos.wrapperClone,
-                TARGET.photos.target,
-              );
               break;
             case false:
               preview.append(imageSample);

@@ -1,7 +1,8 @@
-import { mapFilter } from './filters.js';
+import { mapFilter, showFilterError } from './filters.js';
 import { setPinAddress } from './forms-control.js';
 import { placeTypeChangeHandler } from './ad-form-validation.js';
 import { generateOfferPopup } from './generate-offer.js';
+// import { showFilterError } from './popup.js';
 
 let allOffersData = [];
 const MapOptions = {
@@ -100,9 +101,13 @@ const createMarker = (currentOffer) => {
 const createMarkersGroup = (similarOffers) => {
   markerGroup.clearLayers();
   const filteredOffers = mapFilter(similarOffers);
-  filteredOffers.forEach((currentOffer) => {
-    createMarker(currentOffer);
-  });
+  if (filteredOffers.length > 0) {
+    filteredOffers.forEach((currentOffer) => {
+      createMarker(currentOffer);
+    });
+  } else {
+    showFilterError();
+  }
 };
 
 const resetMap = () => {

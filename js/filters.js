@@ -85,4 +85,19 @@ const setMapFilterChange = (callbackFn) => {
   mapFiltersForm.addEventListener('change', debounce(callbackFn));
 };
 
-export { mapFilter, setMapFilterChange };
+const showFilterError = () => {
+  const errorContainer = document.createElement('div');
+  errorContainer.style.zIndex = 100;
+  errorContainer.style.padding = '10px';
+  errorContainer.style.fontSize = '20px';
+  errorContainer.style.textAlign = 'center';
+  errorContainer.style.backgroundColor = 'red';
+  errorContainer.textContent =
+    'Увы, по вашему запросу ничего не найдено ;-( Попробуйте изменить параметры поиска';
+
+  mapFiltersForm.insertAdjacentElement('afterend', errorContainer);
+
+  mapFiltersForm.addEventListener('change', () => errorContainer.remove());
+};
+
+export { mapFilter, setMapFilterChange, showFilterError };
